@@ -1,0 +1,61 @@
+﻿@model  AccommodationTypeActionModel
+@if (Model != null)
+{
+ <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-center" id="myModalLabel">
+                @if (Model.ID > 0)
+                {
+                    <span>Edit Accommodation Type</span>
+                }
+                else
+                {
+                    <span>Create Accommodation Type</span>
+                }
+             </h4>
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+        </div>
+        
+        <div class="modal-body">
+            <form id="actionForm">
+                <input type="hidden" name="ID" value="@Model.ID" />
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="Name" class="form-control" placeholder="Accommodation Type Name" value="@Model.Name">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" name="Description" placeholder="Accommodation Type Description">@Model.Description</textarea>
+                </div>
+            </form>
+        </div>
+        <div class="errorMessage"></div>
+        <div class="modal-footer">
+            <button type="button" id="saveTypeBtn" class="btn btn-primary"><i class="fa fa-save mr-1"></i>Save</button>
+            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Close</button>
+        </div>
+    </div>
+}
+
+<script>
+    $("#saveTypeBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Action","AccommodationTypes")',
+            type: "post",
+            data: $("#actionForm").serialize(),
+            success: function (response) {
+                if (response.Success)
+                {
+                   
+                    location.reload();
+                } else {
+                    $("#errorMessage").html(response.Message);
+                }
+            }
+
+        });
+    });
+</script>

@@ -1,0 +1,96 @@
+﻿@model UsersRolesModel
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-center">
+                User Roles
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            @if (Model.UserRoles != null && Model.UserRoles.Count() > 0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                Current User Roles
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var userRole in Model.UserRoles)
+                        {
+                            <tr>
+                                <td>@userRole.Name</td>
+                                <td>
+                                    <button type="button" data-href="@Url.Action("UserRoles","Users", new { roleID=userRole.Id, isDelete=true })" class="dataBtn btn btn-primary"><i class="fa fa-trash-o mr-1"></i>Detele</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            { <div class="alert alert-warning" role="alert">
+                    NO Role Assign.
+                </div>
+            }
+            <hr />
+            @if (Model.Roles != null && Model.Roles.Count()>0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                Roles
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var roles in Model.Roles)
+                        {
+                        <tr>
+                            <td>@roles.Name</td>
+                            <td>
+                                <button type="button" data-href="@Url.Action("UserRoles", "Users",new { userID=Model.UserID, roleID=roles.Id})" class="dataBtn btn btn-success"><i class="fa fa-check-square-o mr-1"></i>Assign</button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                 }
+            </div>
+        <div class="errorMessage"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Close</button>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(".dataBtn").click(function () {
+
+        $.ajax({
+            url: $(this).attr("data-href"),
+            type:"POST"
+        }).done(function (response) {
+
+            if (response.Success) {
+
+           $.ajax({
+                url: '@Url.Action("UserRoles", "Users" ,new { ID=Model.UserID})',
+
+            }).done(function(response) {
+                $("#myModal .modal-dialog").html(response);
+            })
+            }
+        }).fail(function (XHLHttpRequest, textStatus, errorThrown) {
+            alert("FAIL");
+        });
+    });
+</script>
+

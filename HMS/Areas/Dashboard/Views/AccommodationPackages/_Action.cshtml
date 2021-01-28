@@ -1,0 +1,141 @@
+﻿@model AccommodationPackageModel
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-center" id="myModalLabel">
+                @if (Model.ID > 0)
+                {
+                    <span>Edit Accommodation Package</span>
+                }
+                else
+                {
+                    <span>Create Accommodation Package</span>
+                }
+            </h4>
+
+
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+        </div>
+
+        <div class="modal-body">
+            <form id="actionForm">
+                <input type="hidden" name="ID" value="@Model.ID" />
+                <div class="form-group">
+                    <label>Accommodation Type Name </label>
+                    <select name="AccommodationTypeID" class="form-control">
+                        @foreach (var accommodation in Model.AccommodationTypes)
+                        {
+                            <option  @(accommodation.ID == Model.AccommodationTypeID?"selected":string.Empty) value="@accommodation.ID">@accommodation.Name</option>
+
+                        }
+                    </select>
+                     </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="Name" class="form-control" placeholder="Accommodation Type Name" value="@Model.Name">
+                </div>
+                <div class="form-group">
+                    <label>NO OF Room</label>
+                    <textarea class="form-control" name="NoOfRoom" placeholder="Accommodation Type Description">@Model.NoOfRoom</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="FeePerNight">Free Per Night</label>
+                    <textarea class="form-control" name="FeePerNight" placeholder="Accommodation Type Description">@Model.FeePerNight</textarea>
+                </div> 
+                <div class="form-group">
+                    <label for="picture">Picture</label>
+                    <input class=" m-1" id="selectPictures" type="file" name="picture" value="" multiple />
+                    <input type="hidden" id="pictureIDs" name="PictureIDs" value="" />
+                </div>
+                <div class="form-group" id="ImgArea">
+                    @if (Model.AccommodationPackagePictures != null && Model.AccommodationPackagePictures.Count() > 0)
+                    {
+                        foreach (var picture in Model.AccommodationPackagePictures)
+                        {
+                            <img src="/images/site/@picture.Picture.Url" data-Id="@picture.Picture.ID" class="img-fluid image" style="width:200px" onclick="removeMe(this)" />
+
+                        }
+                    }
+                </div>
+            </form>
+        </div>
+        <div class="errorMessage"></div>
+        <div class="modal-footer">
+            <button type="button" id="saveTypeBtn" class="btn btn-primary"><i class="fa fa-save mr-1"></i>Save</button>
+            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Close</button>
+        </div>
+    </div>
+
+    <div id="ImageTemplate">
+        <img src="" data-Id="" class="img-fluid image" style="width:200px" onclick="removeMe(this)" />
+    </div>
+}
+
+<script>
+    $("#saveTypeBtn").click(function () {
+        debugger;
+         var pictureIDs = [];
+        $("#ImgArea .image").each(function () {
+            var pictureID = $(this).attr("data-Id");
+            pictureIDs.push(pictureID);
+        });
+        $("#pictureIDs").val(pictureIDs.join());
+        $.ajax({
+            url: '@Url.Action("Action","AccommodationPackages")',
+            type: "post",
+            data: $("#actionForm").serialize(),
+            success: function (response) {
+                if (response.Success)
+                {
+                  location.reload();
+                } else {
+                    $(".errorMessage").html(response.Message);
+                }
+            }
+
+        });
+    }); 
+
+    $(document).ready(function () {
+       
+        $("#selectPictures").change(function () {
+        var element = this;
+        var formData = new FormData();
+        var totalFiles = element.files.length;
+
+        for (var i = 0; i < totalFiles; i++) {
+            var file = element.files[i];
+            formData.append("Photo", file);
+}
+$.ajax({
+           type:'POST',
+                url: '@Url.Action("UploadImage","Shared")',
+                data: formData,
+                dataType:'json',
+            contentType: false,
+                processData:false
+            })
+    .done(function (response) {
+              if (response.Success) {
+                  for (var i = 0; i < response.PicList.length; i++) {
+
+                    var picture = response.PicList[i];
+                    var $imgHtml = $("#ImageTemplate").clone();
+                    $imgHtml.find("img").attr("src", "/images/site/" + picture.Url);
+                    $imgHtml.find("img").attr("data-Id",picture.ID);
+                    $("#ImgArea").append($imgHtml.html());
+                   }
+              }
+            })
+            .fail(function (XHLHttpRequest, textStatus, errorThrown) {
+                alert("FAIL");
+            });
+        });
+    });
+    function removeMe(element) {
+        debugger;
+        element.remove();
+    }
+</script>

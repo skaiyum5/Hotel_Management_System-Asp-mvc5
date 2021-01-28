@@ -1,0 +1,53 @@
+﻿@model AccommodationTypeListingModel
+@{
+    ViewBag.Title = "Index";
+}
+    <div class="container">
+
+        <h2>Accommodation Types</h2>
+        <hr />
+        <div class="row">
+            <div class="col col-lg-12">
+                <form action="" method="get">
+                    <div class="input-group col-lg-8 float-left">
+                        <input class="form-control m-1" placeholder="Search." name="searchTerm" value="@Model.SearchTerm" type="text" required />
+                    </div>
+                    <div class="input-group-append col-lg-4 float-left">
+                        <button class="btn btn-outline-primary m-1" type="submit"><i class="fa fa-search mr-1"></i>Search</button>
+                        <a class="btn btn-outline-secondary m-1" href="@Url.Action("Index", "AccommodationTypes")" ><i class="fa fa-refresh mr-1"></i>Reset</a>
+                        <button data-href="@Url.Action("Action", "AccommodationTypes")" class="action-btn btn btn-outline-success m-1" data-toggle="modal" data-target="#myModal" type="button"><i class="fa fa-plus mr-1"></i>Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col col-lg-12">
+                @{Html.RenderPartial("_Listing",Model);}
+            </div>
+
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+
+
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+
+    <script>
+        $(".action-btn").click(function () {
+          
+           $.ajax({
+                url: $(this).attr("data-href"),
+                
+            }).done(function(response) {
+                $("#myModal .modal-dialog").html(response);
+            }).fail(function (XHLHttpRequest, textStatus, errorThrown) {
+            alert("FAIL");
+        });
+            });
+    </script>

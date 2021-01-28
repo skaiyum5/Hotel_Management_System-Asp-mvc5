@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>@ViewBag.Title - HMS</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/Areas/Dashboard/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="~/Areas/Dashboard/Content/css/simple-sidebar.css" rel="stylesheet" />
+    <link href="~/Areas/Dashboard/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/Areas/Dashboard/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Areas/Dashboard/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <div class="d-flex" id="wrapper">
+
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center">
+            <i class="fa fa-home mr-1"></i>Hotel Management System 
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="@Url.Action("Index","AccommodationTypes")" class="list-group-item list-group-item-action bg-light "><i class="fa fa-building-o mr-1"></i>Accommodation Type</a>
+                <a href="@Url.Action("Index","AccommodationPackages")" class="list-group-item list-group-item-action bg-light "><i class="fa fa-gift mr-1"></i>Accommodation Package</a>
+                <a href="@Url.Action("Index","Accommodation")" class="list-group-item list-group-item-action bg-light "><i class="fa fa-list-alt mr-1"></i>Accommodation</a>
+                <a href="@Url.Action("Index","Roles")" class="list-group-item list-group-item-action bg-light"><i class="fa fa-user-md mr-1"></i>Roles</a>
+                <a href="@Url.Action("Index","Users")" class="list-group-item list-group-item-action bg-light"><i class="fa fa-users mr-1"></i>Users</a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <button class="btn btn-primary" id="menu-toggle"><i class="fa fa-dropbox mr-1"></i>Toggle Menu</button>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-share-square mr-1"></i>Logout <span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            @using (Html.BeginForm("LogOff", "Account",new {area=""}, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            {
+            @Html.AntiForgeryToken()
+
+            }
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- Menu Toggle Script -->
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+
+</body>
+
+</html>

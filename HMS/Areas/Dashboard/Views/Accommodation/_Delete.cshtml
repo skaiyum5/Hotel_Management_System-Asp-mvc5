@@ -1,0 +1,67 @@
+﻿@model  AccommodationTypeActionModel
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-center" id="myModalLabel">
+                Delete Accommodation Type
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+        </div>
+
+        
+        <div class="modal-body">
+            <form id="deleteForm">
+                <input type="hidden" name="ID" value="@Model.ID" />
+            </form>
+            <div class="alert alert-warning" role="alert">
+                Are You Sure ?
+            </div>
+
+        </div>
+            <div class="errorMessage"></div>
+            <div class="modal-footer">
+                <button type="button" id="deleteTypeBtn" class="btn btn-danger"><i class="fa fa-trash-o mr-1"></i>Delete</button>
+                <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Close</button>
+            </div>
+        
+    </div>
+    
+}
+<script>
+    //for single data
+    @*$("#deleteTypeBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Delete","AccommodationTypes")',
+            trpe: "post",
+            data: {
+                id: $(this).attr('delete-id')
+            },
+            success: function (response) {
+                if (response.Success) {
+                    location.reload();
+                } else {
+                    $("#errorMessage").html(response.Message);
+                }
+            }
+        });
+    });*@
+
+    $("#deleteTypeBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Delete", "AccommodationTypes")',
+            type: "post",
+            data: $("#deleteForm").serialize(),
+            success: function (response) {
+                if (response.Success) {
+                    //location.reload();
+                     window.location.href = '@Url.Action("Index","AccommodationTypes")';
+                } else {
+                    $("#errorMessage").html(response.Message);
+                }
+            }
+        });
+    });
+</script>
+

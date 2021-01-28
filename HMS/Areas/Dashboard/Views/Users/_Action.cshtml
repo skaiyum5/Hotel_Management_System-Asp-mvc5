@@ -1,0 +1,92 @@
+﻿@model UsersActionModel
+@if (Model != null)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-center" id="myModalLabel">
+                @if (Model.ID !=null)
+                {
+                    <span>Edit User</span>
+                }
+                else
+                {
+                    <span>Create User</span>
+                }
+            </h4>
+
+
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+        </div>
+
+        <div class="modal-body">
+            <form id="actionForm">
+                <input type="hidden" name="ID" value="@Model.ID" />
+                <div class="form-group">
+                    <label>Roles </label>
+                    <select name="RolesID" class="form-control">
+                        @if (Model.Roles!=null)
+                        {
+                            foreach (var role in Model.Roles)
+                            {
+                                <option @(role.Id == Model.RoleID ? "selected" : string.Empty) value="@role.Id">@role.Name</option>
+                                
+                            }
+                        }
+
+                    </select>
+                     </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="FullName" class="form-control" placeholder="Full Name" value="@Model.FullName">
+                </div>
+                <div class="form-group">
+                    <label>User Name</label>
+                    <input class="form-control" name="UserName" placeholder="User Name"value="@Model.UserName">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input class="form-control" name="Email" placeholder="Email" value="@Model.Email">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input class="form-control" name="Phone" placeholder="Phone" value="@Model.Phone">
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input class="form-control" name="Country" placeholder="Country" value="@Model.Country">
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input class="form-control" name="City" placeholder="City" value="@Model.City">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea class="form-control" name="Address" placeholder="Address" value="">@Model.Address</textarea>
+                </div>
+            </form>
+        </div>
+        <div class="errorMessage"></div>
+        <div class="modal-footer">
+            <button type="button" id="saveTypeBtn" class="btn btn-primary"><i class="fa fa-save mr-1"></i>Save</button>
+            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Close</button>
+        </div>
+    </div>
+}
+
+<script>
+    $("#saveTypeBtn").click(function () {
+        $.ajax({
+            url: '@Url.Action("Action","Users")',
+            type: "post",
+            data: $("#actionForm").serialize()
+        })
+            .done(function (response) {
+                if (response.Success) {
+                    location.reload();
+                } else {
+                    $(".errorMessage").html(response.Message);
+                }
+            });
+    });
+</script>
